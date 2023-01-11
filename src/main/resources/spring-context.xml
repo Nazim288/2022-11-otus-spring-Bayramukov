@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:property-placeholder properties-ref="myProperties"/>
+    <bean id="myProperties"
+          class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <property name="properties">
+            <props>
+                <prop key="questionResource">questions.csv</prop>
+                <prop key="answerResource">answers.csv</prop>
+                <prop key="taskResource">tasks.csv</prop>
+            </props>
+        </property>
+    </bean>
+
+
+
+
+    <bean id="resourceFileNameProvider" class="ru.otus.homework.providers.impl.ResourceFileNameProvider">
+        <constructor-arg name="questionsResource" value="${questionResource}"/>
+        <constructor-arg name="answersResource" value="${answerResource}"/>
+        <constructor-arg name="tasksResource" value="${taskResource}"/>
+
+    </bean>
+  <bean id="resourcesReaderProvider" class="ru.otus.homework.providers.impl.ResourcesReaderProviderImpl">
+      <constructor-arg name="fileNameProvider" ref="resourceFileNameProvider"/>
+
+  </bean>
+
+    <bean id="objectParser" class="ru.otus.homework.util.ObjectParser">
+    </bean>
+   <bean id="question" class="ru.otus.homework.domain.Question">
+    </bean>
+
+    <bean id="questionDao" class="ru.otus.homework.dao.impl.QuestionDaoImpl">
+        <constructor-arg name="provider" ref="resourcesReaderProvider"/>
+    </bean>
+    <bean id="questionService" class="ru.otus.homework.services.impl.QuestionServiceImpl">
+        <constructor-arg name="questionDao" ref="questionDao"/>
+    </bean>
+   <bean id="answer" class="ru.otus.homework.domain.Answer">
+    </bean>
+
+    <bean id="answerDao" class="ru.otus.homework.dao.impl.AnswerDaoImpl">
+        <constructor-arg name="provider" ref="resourcesReaderProvider"/>
+    </bean>
+    <bean id="answerService" class="ru.otus.homework.services.impl.AnswerServiceImpl">
+        <constructor-arg name="answerDao" ref="answerDao"/>
+    </bean>
+
+   <bean id="task" class="ru.otus.homework.domain.Task">
+    </bean>
+
+    <bean id="taskDao" class="ru.otus.homework.dao.impl.TaskDaoImpl">
+        <constructor-arg name="provider" ref="resourcesReaderProvider"/>
+        <constructor-arg name="questionDao" ref="questionDao"/>
+        <constructor-arg name="answerDao" ref="answerDao"/>
+    </bean>
+    <bean id="taskService" class="ru.otus.homework.services.impl.TaskServiceImpl">
+        <constructor-arg name="taskDao" ref="taskDao"/>
+    </bean>
+
+</beans>
