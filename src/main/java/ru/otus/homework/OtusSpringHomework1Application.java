@@ -1,13 +1,15 @@
 package ru.otus.homework;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import ru.otus.homework.services.impl.TaskServiceImpl;
 
-@SpringBootApplication
+
 public class OtusSpringHomework1Application {
 
     public static void main(String[] args) {
-        SpringApplication.run(OtusSpringHomework1Application.class, args);
+        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("/spring-context.xml");
+        context.getBean(TaskServiceImpl.class).printAll();
+
     }
 
 }
