@@ -1,0 +1,10 @@
+server:
+  port: 8080
+
+resource:
+  files:
+    questions-resource: 'data/questions.csv'
+    answers-resource: 'data/answers.csv'
+    tasks-resource: 'data/tasks.csv'
+    student-resource: 'data/students.csv'
+    exam-resource: 'data/exams.csv'
