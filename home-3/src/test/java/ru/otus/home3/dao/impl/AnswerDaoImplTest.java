@@ -1,4 +1,4 @@
-package ru.otus.home2.impl;
+package ru.otus.home3.dao.impl;
 
 import com.opencsv.CSVParser;
 import com.opencsv.CSVParserBuilder;
@@ -8,14 +8,14 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.util.Assert;
-import ru.otus.home2.dao.impl.AnswerDaoImpl;
-import ru.otus.home2.domains.Answer;
-import ru.otus.home2.enums.ResourceType;
-import ru.otus.home2.providers.impl.ResourcesReaderProviderImpl;
+import ru.otus.home3.domains.Answer;
+import ru.otus.home3.enums.ResourceType;
+import ru.otus.home3.providers.impl.ResourcesReaderProviderImpl;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -25,12 +25,11 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-@SpringBootTest
 @DisplayName("Должен ")
+@ExtendWith(MockitoExtension.class)
 class AnswerDaoImplTest {
     @Mock
     private ResourcesReaderProviderImpl provider;
-
 
     @InjectMocks
     private AnswerDaoImpl answerDao;
@@ -45,7 +44,7 @@ class AnswerDaoImplTest {
         existingAnswerId = 0L;
         answerValue = "240";
         answerId = 1L;
-        String resource = "data/answers_test.csv";
+        String resource = "data/ru/answers_test.csv";
         resourceType = ResourceType.ANSWER;
         final ClassLoader classLoader = getClass().getClassLoader();
         InputStream inputStream = classLoader.getResourceAsStream(resource);
@@ -58,7 +57,6 @@ class AnswerDaoImplTest {
                 .withSkipLines(1)
                 .withCSVParser(parser)
                 .build();
-
         given(provider.getCsvReader(any()))
                 .willReturn(csvReader);
 
