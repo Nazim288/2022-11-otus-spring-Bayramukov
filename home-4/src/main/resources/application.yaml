@@ -1,0 +1,19 @@
+server:
+  port: 8080
+
+resource:
+  files:
+    questions-resource: 'questions.csv'
+    answers-resource: 'answers.csv'
+    tasks-resource: 'tasks.csv'
+    student-resource: 'data/students.csv'
+    exam-resource: 'data/exams.csv'
+    resources-path: 'home-4/src/main/resources/'
+
+application:
+  locale: ru
+
+spring:
+  shell:
+    interactive:
+      enabled: true
