@@ -1,5 +1,6 @@
 package ru.otus.home5.dao.impl;
 
+import lombok.AllArgsConstructor;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -7,18 +8,14 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 import ru.otus.home5.dao.AuthorDao;
 import ru.otus.home5.domains.Author;
+import ru.otus.home5.mapper.AuthorMapper;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @Component
+@AllArgsConstructor
 public class AuthorDaoImpl implements AuthorDao {
     private final NamedParameterJdbcOperations namedParameterJdbcOperations;
-
-    public AuthorDaoImpl(NamedParameterJdbcOperations namedParameterJdbcOperations) {
-        this.namedParameterJdbcOperations = namedParameterJdbcOperations;
-    }
 
     @Override
     public long insert(Author author) {
@@ -36,11 +33,15 @@ public class AuthorDaoImpl implements AuthorDao {
 
     @Override
     public Author getById(long id) {
-        return null;
+        Map<String, Object> params = Collections.singletonMap("id", id);
+        return namedParameterJdbcOperations.queryForObject(
+                "select id, name, last_name from author where id = :id", params, new AuthorMapper()
+        );
     }
 
     @Override
-    public void deleteById(long id) {
-
+    public List<Author> getAll() {
+        return namedParameterJdbcOperations.query("select id, name, last_name from author", new AuthorMapper());
     }
+
 }
