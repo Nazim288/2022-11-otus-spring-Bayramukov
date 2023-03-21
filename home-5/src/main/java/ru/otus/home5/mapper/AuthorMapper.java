@@ -13,7 +13,7 @@ public class AuthorMapper implements RowMapper<Author> {
         long id = resultSet.getLong("id");
         String name = resultSet.getString("name");
         String lastName = resultSet.getString("last_name");
-        Author author = new Author(name, lastName);
+        Author author = new Author(id, name, lastName);
         author.setId(id);
         return author;
     }

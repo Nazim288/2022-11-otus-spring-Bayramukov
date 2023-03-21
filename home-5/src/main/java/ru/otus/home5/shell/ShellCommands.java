@@ -13,8 +13,7 @@ import ru.otus.home5.domains.Genre;
 import ru.otus.home5.dto.BookDto;
 import ru.otus.home5.service.BookService;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @ShellComponent
 @RequiredArgsConstructor
@@ -30,10 +29,10 @@ public class ShellCommands {
         return "AUTHOR SAVE SUCCESSFULLY";
     }
 
-    @ShellMethod(value = "get book by id", key = {"bookById"})
+    @ShellMethod(value = "get book by id", key = {"bookById", "b-id"})
     public String bookGetById(@ShellOption() Long id) {
-        Book book = bookDao.getById(id);
-        return "book name: " + book.getName();
+        BookDto book = bookService.getById(id);
+        return printBooks(Collections.singletonList(book));
     }
 
     @ShellMethod(value = "delete book by id", key = {"book-del"})
@@ -50,7 +49,19 @@ public class ShellCommands {
 
     @ShellMethod(value = "save new book", key = {"book save", "b-save"})
     public String bookSave(@ShellOption() String name, Long authorId, Long genreId) {
-        bookDao.insert(new Book(name, authorId, genreId));
+        Author author = null;
+        Genre genre = null;
+        try {
+            author = authorDao.getById(authorId);
+        } catch (Exception e) {
+            throw new RuntimeException(String.format("author with id [%s} not found", authorId));
+        }
+        try {
+            genre = genreDao.getById(genreId);
+        } catch (Exception e) {
+            throw new RuntimeException(String.format("genre with id [%s} not found", genreId));
+        }
+        bookDao.insert(new Book(name, author, genre));
         return "SAVE SUCCESSFULLY";
     }
 

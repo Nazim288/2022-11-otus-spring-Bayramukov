@@ -1,15 +1,19 @@
 package ru.otus.home5.domains;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
-
 
 @Data
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class Book {
     private long id;
-    private final String name;
-    private final Long authorId;
-    private final Long genreId;
+    private String name;
+    private Author author;
+    private Genre genre;
 
+    public Book(String name, Author author, Genre genre) {
+        this.name = name;
+        this.author = author;
+        this.genre = genre;
+    }
 }

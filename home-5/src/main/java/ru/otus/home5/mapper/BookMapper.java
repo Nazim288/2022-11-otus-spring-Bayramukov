@@ -2,7 +2,9 @@ package ru.otus.home5.mapper;
 
 import lombok.AllArgsConstructor;
 import org.springframework.jdbc.core.RowMapper;
+import ru.otus.home5.domains.Author;
 import ru.otus.home5.domains.Book;
+import ru.otus.home5.domains.Genre;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,11 +14,17 @@ public class BookMapper implements RowMapper<Book> {
 
     @Override
     public Book mapRow(ResultSet resultSet, int i) throws SQLException {
-        String name = resultSet.getString("name");
-        Long authorId = (Long) resultSet.getObject("author_id");
-        Long genreId = (Long) resultSet.getObject("genre_id");
+        Long bookId = resultSet.getLong("id");
+        String bookName = resultSet.getString("name");
 
-        return new Book(name, authorId, genreId);
+        Long authorId = resultSet.getLong("author.id");
+        String authorName = (String) resultSet.getObject("author.name");
+        String authorLastName = (String) resultSet.getObject("last_name");
+
+        Long genreId = resultSet.getLong("genre.id");
+        String genreName = (String) resultSet.getObject("genre.name");
+
+        return new Book(bookId,bookName, new Author(authorId, authorName, authorLastName), new Genre(genreId,genreName));
     }
 
 

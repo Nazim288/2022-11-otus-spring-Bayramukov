@@ -28,8 +28,7 @@ class Home5ApplicationTests {
     @Autowired
     private GenreDao genreDao;
 
-    private Long authorId;
-    private Long genreId;
+    private Book book;
     private Long bookId;
 
     @Test
@@ -37,20 +36,28 @@ class Home5ApplicationTests {
     }
 
     @BeforeEach
-    void beforeTransaction(){
-        authorId = authorDao.insert(new Author(EXISTING_AUTHOR_NAME, EXISTING_AUTHOR_LASTNAME));
+    void beforeTransaction() {
+        Author author = new Author(EXISTING_AUTHOR_NAME, EXISTING_AUTHOR_LASTNAME);
+        Genre genre = new Genre(EXISTING_GENRE_NAME);
+
+        long authorId = authorDao.insert(author);
+        author.setId(authorId);
         System.out.println("add test author");
-        genreId =genreDao.insert(new Genre(EXISTING_GENRE_NAME));
+
+        long genreId = genreDao.insert(genre);
+        genre.setId(genreId);
         System.out.println("add test genre");
-        bookId = bookDao.insert(new Book(EXISTING_BOOK_NAME, authorId, genreId));
+        book = new Book(EXISTING_BOOK_NAME, author, genre);
+
+        bookId = bookDao.insert(book);
         System.out.println("add test book");
+        book.setId(bookId);
 
     }
 
     @DisplayName("возвращать книгу по его id")
     @Test
     void shouldReturnExpectedPersonById() {
-        Book book = new Book(EXISTING_BOOK_NAME, authorId, genreId);
         Book actualBook = bookDao.getById(bookId);
         assertThat(actualBook).usingRecursiveComparison().isEqualTo(book);
     }
