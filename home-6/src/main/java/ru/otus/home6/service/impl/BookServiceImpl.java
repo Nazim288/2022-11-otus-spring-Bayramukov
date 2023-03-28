@@ -8,13 +8,13 @@ import ru.otus.home6.domains.Book;
 import ru.otus.home6.domains.BookComment;
 import ru.otus.home6.domains.Genre;
 import ru.otus.home6.dto.BookDto;
+import ru.otus.home6.repositories.AuthorRepository;
 import ru.otus.home6.repositories.BookCommentRepository;
 import ru.otus.home6.repositories.BookRepository;
+import ru.otus.home6.repositories.GenreRepository;
 import ru.otus.home6.service.BookService;
 
-import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
-import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,9 +26,8 @@ public class BookServiceImpl implements BookService {
 
     private final BookRepository bookRepository;
     private final BookCommentRepository bookCommentRepository;
-
-    @PersistenceContext
-    private final EntityManager em;
+    private final GenreRepository genreRepository;
+    private final AuthorRepository authorRepository;
 
     @Override
     @Transactional
@@ -51,7 +50,7 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional
     public List<BookComment> getAllComments(Long id) {
-      return bookCommentRepository.findAllCommentsByBookId(id);
+        return bookCommentRepository.findAllCommentsByBookId(id);
     }
 
     @Override
@@ -67,29 +66,29 @@ public class BookServiceImpl implements BookService {
         return bookRepository.save(toEntity(dto));
     }
 
-   private Book toEntity(BookDto dto) {
-       Book book = new Book();
+    private Book toEntity(BookDto dto) {
+        Book book = new Book();
 
-       if (nonNull(dto.getName())) {
-           book.setName(dto.getName());
-       }
-       if (nonNull(dto.getGenre_id())) {
-           Optional<Genre> genre = Optional.ofNullable(em.find(Genre.class, dto.getGenre_id()));
-           if (genre.isPresent()) {
-               book.setGenre(genre.get());
-           } else {
-               throw new EntityNotFoundException(Genre.class.getName());
-           }
-       }
+        if (nonNull(dto.getName())) {
+            book.setName(dto.getName());
+        }
+        if (nonNull(dto.getGenre_id())) {
+            Optional<Genre> genre = genreRepository.findById(dto.getGenre_id());
+            if (genre.isPresent()) {
+                book.setGenre(genre.get());
+            } else {
+                throw new EntityNotFoundException(Genre.class.getName());
+            }
+        }
 
-       if (nonNull(dto.getAuthor_id())) {
-           Optional<Author> author = Optional.ofNullable(em.find(Author.class, dto.getAuthor_id()));
-           if (author.isPresent()) {
-               book.setAuthor(author.get());
-           } else {
-               throw new EntityNotFoundException(Author.class.getName());
-           }
-       }
+        if (nonNull(dto.getAuthor_id())) {
+            Optional<Author> author = authorRepository.findById(dto.getAuthor_id());
+            if (author.isPresent()) {
+                book.setAuthor(author.get());
+            } else {
+                throw new EntityNotFoundException(Author.class.getName());
+            }
+        }
 
         return book;
     }
