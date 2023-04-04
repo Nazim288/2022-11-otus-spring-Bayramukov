@@ -8,12 +8,12 @@ import lombok.Data;
 public class BookDto {
     private Long id;
     private String name;
-    private Long author_id;
-    private Long genre_id;
+    private Long authorId;
+    private Long genreId;
 
     public BookDto(String name, Long author_id, Long genre_id) {
         this.name = name;
-        this.author_id = author_id;
-        this.genre_id = genre_id;
+        this.authorId = author_id;
+        this.genreId = genre_id;
     }
 }

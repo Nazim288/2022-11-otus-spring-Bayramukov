@@ -1,59 +1,29 @@
 package ru.otus.home6.repositories.impl;
 
-import org.springframework.stereotype.Repository;
-import ru.otus.home6.domains.Book;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Component;
 import ru.otus.home6.domains.BookComment;
-import ru.otus.home6.dto.BookCommentDto;
 import ru.otus.home6.repositories.BookCommentRepository;
 
 import javax.persistence.*;
-import java.util.List;
 import java.util.Optional;
 
-import static java.util.Objects.nonNull;
 
-@Repository
+@Component
+@AllArgsConstructor
 public class BookCommentRepositoryImpl implements BookCommentRepository {
-    @PersistenceContext
     private final EntityManager em;
 
-    public BookCommentRepositoryImpl(EntityManager em) {
-        this.em = em;
-    }
-
     @Override
-    public List<BookComment> findAllCommentsByBookId(Long bookId) {
-        TypedQuery<BookComment> query = em.createQuery("select bc from BookComment bc where bc.book.id = :bookId", BookComment.class);
-        query.setParameter("bookId", bookId);
-
-        return query.getResultList();
-    }
-
-    @Override
-    public void delete(Long id) {
-        Query query = em.createQuery("delete " +
-                "from BookComment bc " +
-                "where bc.id = :id");
-        query.setParameter("id", id);
-        query.executeUpdate();
+    public void delete(BookComment comment) {
+        em.remove(comment);
 
     }
 
     @Override
-    public BookComment update(BookCommentDto dto) {
-        BookComment updatedBookComment;
-        Optional<BookComment> comment = Optional.ofNullable(em.find(BookComment.class, dto.getId()));
+    public Optional<BookComment> findById(Long id) {
+        return Optional.ofNullable(em.find(BookComment.class, id));
 
-        if (comment.isPresent()) {
-            updatedBookComment = comment.get();
-            if (nonNull(dto.getCommentValue())) {
-                updatedBookComment.setValue(dto.getCommentValue());
-            }
-        } else {
-            throw new EntityNotFoundException(Book.class.getName());
-        }
-        em.persist(updatedBookComment);
-        return updatedBookComment;
     }
 
     @Override

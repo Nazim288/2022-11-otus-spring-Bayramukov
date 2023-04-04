@@ -1,14 +1,12 @@
 package ru.otus.home6.domains;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -28,8 +26,8 @@ public class Book {
     @JoinColumn(name = "genre_id", referencedColumnName = "id")
     private Genre genre;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "book")
-    private List<BookComment> comments = new ArrayList<>();
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "book", fetch = FetchType.LAZY)
+    private List<BookComment> comments;
 
 
 }

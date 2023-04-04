@@ -1,12 +1,11 @@
 package ru.otus.home6.domains;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -19,7 +18,7 @@ public class BookComment {
     @Column(name = "comment_value")
     private String value;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     @JoinColumn(name = "book_id", referencedColumnName = "id")
     private Book book;
 

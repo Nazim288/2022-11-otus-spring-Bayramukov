@@ -5,7 +5,6 @@ import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
 import ru.otus.home6.domains.Book;
-import ru.otus.home6.domains.BookComment;
 import ru.otus.home6.dto.BookCommentDto;
 import ru.otus.home6.dto.BookDto;
 import ru.otus.home6.service.BookCommentService;
@@ -44,15 +43,9 @@ public class ShellCommands {
         return "BOOK UPDATED";
     }
 
-    @ShellMethod(value = "get all book comments", key = {"all-c"})
+    @ShellMethod(value = "get all book comments", key = {"c"})
     public String getAllBookComments(@ShellOption()Long bookId) {
         return printBookComments(bookService.getAllComments(bookId));
-    }
-
-    @ShellMethod(value = "delete bookComment by id", key = {"del-c"})
-    public String deleteBookComment(@ShellOption()Long bookId) {
-        bookCommentService.delete(bookId);
-        return "COMMENT DELETED";
     }
 
     @ShellMethod(value = "save comment", key = {"save-c"})
@@ -60,13 +53,6 @@ public class ShellCommands {
         BookCommentDto dto = new BookCommentDto(value, bookId);
         bookCommentService.create(dto);
         return "COMMENT SAVED";
-    }
-
-   @ShellMethod(value = "update comment", key = {"up-c"})
-    public String updateBookComment(@ShellOption() Long id, String value) {
-        BookCommentDto dto = new BookCommentDto(id, value);
-        bookCommentService.update(dto);
-        return "UPDATE COMMENT";
     }
 
 
@@ -85,12 +71,12 @@ public class ShellCommands {
 
     }
 
-    private String printBookComments(List<BookComment> comments) {
+    private String printBookComments(List<String> comments) {
         StringBuilder text = new StringBuilder();
         int i = 0;
         if (comments.size() > 0) {
-            for (BookComment comment : comments) {
-                text.append(++i).append(": ").append(comment.getValue()).append("\n");
+            for (String comment : comments) {
+                text.append(++i).append(": ").append(comment).append("\n");
             }
 
         } else {

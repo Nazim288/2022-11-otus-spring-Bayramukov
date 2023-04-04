@@ -1,7 +1,6 @@
 package ru.otus.home6.service;
 
 import ru.otus.home6.domains.Book;
-import ru.otus.home6.domains.BookComment;
 import ru.otus.home6.dto.BookDto;
 
 import java.util.List;
@@ -13,7 +12,7 @@ public interface BookService {
 
     Book update(BookDto dto);
 
-    List<BookComment> getAllComments(Long id);
+    List<String> getAllComments(Long id);
 
     Book getById(Long id);
 
