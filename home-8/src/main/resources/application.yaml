@@ -1,0 +1,14 @@
+spring:
+  data:
+    mongodb:
+#      uri: mongodb://localhost:27017/dart
+
+      host: localhost
+      port: 27017
+      database: dart
+
+mongock:
+  runner-type: "ApplicationRunner" # default
+  #runner-type: "InitializingBean"
+  change-logs-scan-package:
+    - ru/otus/home8/mongock/changelog
