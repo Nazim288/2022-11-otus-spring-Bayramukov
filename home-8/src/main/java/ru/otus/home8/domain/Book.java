@@ -13,7 +13,7 @@ import java.util.List;
 @Document(collection = "book")
 public class Book {
     @Id
-    private long id;
+    private String id;
 
     private String name;
 
@@ -21,7 +21,7 @@ public class Book {
 
     private String genre;
 
-    private List<String> comments = new ArrayList<>();
+    private List<BookComment> comments = new ArrayList<>();
 }
 
 
