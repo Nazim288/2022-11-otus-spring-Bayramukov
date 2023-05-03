@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
+import ru.otus.home8.domain.Book;
 import ru.otus.home8.domain.BookComment;
 import ru.otus.home8.dto.BookDto;
 import ru.otus.home8.service.BookService;
@@ -17,24 +18,24 @@ import static java.util.Objects.nonNull;
 public class ShellCommands {
     private final BookService bookService;
 
-    @ShellMethod(value = "save new book", key = {"save-b"})
-    public String saveBook(@ShellOption() String name, String author, String genre) {
-        BookDto dto = new BookDto(name, author, genre);
+    @ShellMethod(value = "save new book", key = {"s-b"})
+    public String saveBook(@ShellOption() String name, String authorId, String genreId) {
+        BookDto dto = new BookDto(name, authorId, genreId);
         bookService.createBook(dto);
         return "BOOK SAVED";
     }
 
-    @ShellMethod(value = "get all books", key = {"all-books", "b-all"})
+    @ShellMethod(value = "get all books", key = {"all-books", "all-b"})
     public String getAllBooks() {
         return printBooks(bookService.getAllBooks());
     }
 
-    @ShellMethod(value = "get book by id", key = {"", "b-by-id"})
+    @ShellMethod(value = "get book by id", key = {"", "id-b"})
     public String getBookById(@ShellOption() String id) {
-        return printBooks(bookService.getBookById(id));
+        return printBook(bookService.getBookById(id));
     }
 
-    @ShellMethod(value = "delete book by id", key = {"del-b"})
+    @ShellMethod(value = "delete book by id", key = {"d-b"})
     public String deleteBook(@ShellOption() String bookId) {
         String result = "BOOK DELETED";
         if (!bookService.deleteBook(bookId)) {
@@ -43,13 +44,13 @@ public class ShellCommands {
         return result;
     }
 
-    @ShellMethod(value = "save comment", key = {"save-c"})
+    @ShellMethod(value = "save comment", key = {"s-c"})
     public String saveBookComment(@ShellOption() String value, String bookId) {
         bookService.addComment(bookId, value);
         return "COMMENT SAVED";
     }
 
-    @ShellMethod(value = "updated book", key = {"up-b"})
+    @ShellMethod(value = "updated book", key = {"u-b"})
     public String updateBook(@ShellOption() String bookId, String name, String author, String genre) {
         BookDto dto = new BookDto(name, author, genre);
         bookService.updateBook(bookId, dto);
@@ -62,23 +63,23 @@ public class ShellCommands {
         return printBookComments(bookService.getComments(bookId));
     }
 
-    @ShellMethod(value = "delete bookComment by id", key = {"del-c"})
+    @ShellMethod(value = "delete bookComment by id", key = {"d-c"})
     public String deleteBookComment(@ShellOption() String commentId) {
         bookService.deleteCommentById(commentId);
         return "COMMENT DELETED";
     }
 
 
-    private String printBooks(List<BookDto> books) {
+    private String printBooks(List<Book> books) {
         StringBuilder text = new StringBuilder();
         int i = 0;
         if (books.size() > 0) {
-            for (BookDto dto : books) {
+            for (Book dto : books) {
                 text.append(++i).append(")").append("\n")
                         .append("book id: ").append(dto.getId()).append("\n")
                         .append("book name: ").append(dto.getName()).append("\n")
-                        .append("book author: ").append(dto.getAuthor()).append(" ").append("\n")
-                        .append("book genre: ").append(dto.getGenre()).append("\n");
+                        .append("book author: ").append(dto.getAuthor().getName()).append(" ").append("\n")
+                        .append("book genre: ").append(dto.getGenre().getName()).append("\n");
             }
             return text.toString();
         } else return "not found";
@@ -86,7 +87,7 @@ public class ShellCommands {
 
     }
 
-    private String printBooks(BookDto dto) {
+    private String printBook(Book dto) {
         StringBuilder text = new StringBuilder();
         int i = 0;
         if (nonNull(dto)) {
@@ -94,8 +95,8 @@ public class ShellCommands {
             text.append(++i).append(")").append("\n")
                     .append("book id: ").append(dto.getId()).append("\n")
                     .append("book name: ").append(dto.getName()).append("\n")
-                    .append("book author: ").append(dto.getAuthor()).append(" ").append("\n")
-                    .append("book genre: ").append(dto.getGenre()).append("\n");
+                    .append("book author: ").append(dto.getAuthor().getName()).append(" ").append("\n")
+                    .append("book genre: ").append(dto.getGenre().getName()).append("\n");
 
             return text.toString();
         } else return "not found";

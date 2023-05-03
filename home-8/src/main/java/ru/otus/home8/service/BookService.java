@@ -3,38 +3,51 @@ package ru.otus.home8.service;
 import com.mongodb.MongoException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.otus.home8.domain.Author;
 import ru.otus.home8.domain.Book;
 import ru.otus.home8.domain.BookComment;
+import ru.otus.home8.domain.Genre;
 import ru.otus.home8.dto.BookDto;
-import ru.otus.home8.mapper.BookMapper;
+import ru.otus.home8.repository.AuthorRepository;
 import ru.otus.home8.repository.BookCommentRepository;
 import ru.otus.home8.repository.BookRepository;
+import ru.otus.home8.repository.GenreRepository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
+
+import static java.util.Objects.nonNull;
 
 @Service
 @AllArgsConstructor
 public class BookService {
     private BookRepository bookRepository;
-    private BookMapper bookMapper;
+    private AuthorRepository authorRepository;
+    private GenreRepository genreRepository;
     private BookCommentRepository bookCommentRepository;
 
-    public List<BookDto> getAllBooks() {
-        return bookRepository.findAll().stream().map(bookMapper::toDto).collect(Collectors.toList());
+    public List<Book> getAllBooks() {
+        return bookRepository.findAll();
     }
 
-    public BookDto getBookById(String id) {
-        return bookRepository.findById(id).map(bookMapper::toDto).orElse(null);
+    public Book getBookById(String id) {
+        return bookRepository.findById(id).orElse(null);
     }
 
     public void createBook(BookDto bookDto) {
         Book book = new Book();
         book.setName(bookDto.getName());
-        book.setAuthor(bookDto.getAuthor());
-        book.setGenre(bookDto.getGenre());
 
+        if (nonNull(bookDto.getAuthorId())) {
+            Author author = authorRepository.findById(bookDto.getAuthorId())
+                    .orElseThrow(() -> new RuntimeException("Author not found with id " + bookDto.getAuthorId()));
+            book.setAuthor(author);
+        }
+        if (nonNull(bookDto.getGenreId())) {
+            Genre genre = genreRepository.findById(bookDto.getGenreId())
+                    .orElseThrow(() -> new RuntimeException("Genre not found with id " + bookDto.getGenreId()));
+            book.setGenre(genre);
+        }
         bookRepository.save(book);
     }
 
@@ -42,8 +55,16 @@ public class BookService {
         Book existingBook = bookRepository.findById(id).orElse(null);
         if (existingBook != null) {
             existingBook.setName(dto.getName());
-            existingBook.setAuthor(dto.getAuthor());
-            existingBook.setGenre(dto.getGenre());
+            if(nonNull(dto.getAuthorId())){
+                Author author = authorRepository.findById(dto.getAuthorId())
+                        .orElseThrow(() -> new RuntimeException("Author not found with id " + dto.getAuthorId()));
+                existingBook.setAuthor(author);
+            }
+            if(nonNull(dto.getGenreId())){
+                Genre genre = genreRepository.findById(dto.getAuthorId())
+                        .orElseThrow(() -> new RuntimeException("Genre not found with id " + dto.getGenreId()));
+                existingBook.setGenre(genre);
+            }
             bookRepository.save(existingBook);
         }
     }

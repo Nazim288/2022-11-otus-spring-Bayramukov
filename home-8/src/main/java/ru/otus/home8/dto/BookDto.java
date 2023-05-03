@@ -10,13 +10,13 @@ import lombok.NoArgsConstructor;
 public class BookDto {
     private String id;
     private String name;
-    private String author;
-    private String genre;
+    private String authorId;
+    private String genreId;
 
 
-    public BookDto(String name, String author, String genre) {
+    public BookDto(String name, String authorId, String genreId) {
         this.name = name;
-        this.author = author;
-        this.genre = genre;
+        this.authorId = authorId;
+        this.genreId = genreId;
     }
 }

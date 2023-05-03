@@ -3,6 +3,7 @@ package ru.otus.home8.domain;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
@@ -16,10 +17,10 @@ public class Book {
     private String id;
 
     private String name;
-
-    private String author;
-
-    private String genre;
+    @DBRef
+    private Author author;
+    @DBRef
+    private Genre genre;
 
     private List<BookComment> comments = new ArrayList<>();
 }
