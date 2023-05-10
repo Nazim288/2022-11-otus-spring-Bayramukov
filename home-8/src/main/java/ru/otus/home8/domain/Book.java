@@ -22,7 +22,6 @@ public class Book {
     @DBRef
     private Genre genre;
 
-    private List<BookComment> comments = new ArrayList<>();
 }
 
 

@@ -44,8 +44,6 @@ public class DataBaseChangeLog {
                 .append("bookId", bookId.toString());
         commentCollection.insertOne(commentDoc);
 
-        bookCollection.updateOne(eq("_id", bookId), push("comments", commentDoc));
-
     }
 
 
